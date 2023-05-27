@@ -4,12 +4,8 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
-
-### More Information
-
-A place to include any other types of information that you'd like to include about yourself.
+I'm a student studying Computer Science at Stanford University. I'm mainly interested in applications of AI to the real world.
 
 ### Contact me
 
-[email@domain.com](mailto:email@domain.com)
+pliu1 _at_ stanford.edu
