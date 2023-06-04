@@ -1,8 +1,6 @@
 ---
 layout: post
 title: Bayesian Deep Learning
-markdown_extensions:
-    - toc
 ---
 
 Over the past few days, I've been doing some reading about Bayesian Deep Learning and Bayesian Neural Networks, so I'll be going over what I've learned.
@@ -15,6 +13,9 @@ Why do we care about BNNs? Deep neural networks have been highly successful rece
 The term **Bayesian Deep Learning (BDL)** seems to be used interchangeably with BNNs in most of the literature that I read. However, I will be using BDL in the sense defined in [A Survey on Deep Bayesian Learning (Wang et al. 2020)](https://arxiv.org/abs/1604.01662), as a general term that describes the unification of probabilistic graphical models (PGMs) and DL to involve a broader class of methods outside of BNNs under the BDL umbrella. Broadly, BDL allows us to combine the strengths of PGMs (e.g., uncertainty quantification, causal inference) and DL (e.g., predictive power).
 
 In this post, I will go over how BNNs work, their advantages, and key challenges. I will then briefly go over the broader topic of BDL and a couple application areas.
+
+* TOC 
+{:toc}
 
 # Bayesian Neural Networks
 ## Structure
