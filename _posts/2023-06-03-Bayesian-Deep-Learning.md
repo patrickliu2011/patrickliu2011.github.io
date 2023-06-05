@@ -5,7 +5,8 @@ title: Bayesian Deep Learning
 
 Over the past few days, I've been doing some reading about Bayesian Deep Learning and Bayesian Neural Networks, so I'll be going over what I've learned.
 
-*Table of Contents*
+## Table of Contents
+{:no_toc}
 * TOC
 {:toc}
 
