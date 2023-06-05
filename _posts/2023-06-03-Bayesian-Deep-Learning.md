@@ -74,7 +74,7 @@ Beyond explicit Bayesian networks, stochastic processes can also be used to hand
 # Example Applications of BDL
 I read two articles on applying BNNs to healthcare and physics, which I will go over in this section.
 
-**Healthcare**
+## Healthcare
 [A Review on Bayesian Deep Learning in
 Healthcare: Applications and Challenges (Abdullah et al. 2022)](https://ieeexplore.ieee.org/abstract/document/9745083) does a survey of BNN use across tasks in healthcare. Currently, it seems that the primary usage of BNNs in healthcare is for uncertainty quantification, especially on computer vision tasks like image classification and segmentation. As such, there seems to be opportunity to use BDL for interpretability and causality and other tasks outside of single-image CV. 
 
