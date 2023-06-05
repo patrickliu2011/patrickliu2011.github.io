@@ -5,6 +5,10 @@ title: Bayesian Deep Learning
 
 Over the past few days, I've been doing some reading about Bayesian Deep Learning and Bayesian Neural Networks, so I'll be going over what I've learned.
 
+*Table of Contents*
+* TOC
+{:toc}
+
 # Bayesian Deep Learning and Bayesian Neural Networks
 First, **Bayesian Neural Networks (BNNs)** are neural networks that use Bayesian properties, typically by having probability distributions over weights or activations, rather than deterministic values. What makes a BNN "Bayesian" is that the weights or activations are probability distributions. This is in contrast with classical, "frequentist" neural networks, in which weights and activations are deterministic values. Classical NNs can be seen as a special case of BNNs, where the probability distributions are degenerate (i.e. they are Dirac delta functions).
 
@@ -13,9 +17,6 @@ Why do we care about BNNs? Deep neural networks have been highly successful rece
 The term **Bayesian Deep Learning (BDL)** seems to be used interchangeably with BNNs in most of the literature that I read. However, I will be using BDL in the sense defined in [A Survey on Deep Bayesian Learning (Wang et al. 2020)](https://arxiv.org/abs/1604.01662), as a general term that describes the unification of probabilistic graphical models (PGMs) and DL to involve a broader class of methods outside of BNNs under the BDL umbrella. Broadly, BDL allows us to combine the strengths of PGMs (e.g., uncertainty quantification, causal inference) and DL (e.g., predictive power).
 
 In this post, I will go over how BNNs work, their advantages, and key challenges. I will then briefly go over the broader topic of BDL and a couple application areas.
-
-* TOC 
-{:toc}
 
 # Bayesian Neural Networks
 ## Structure
