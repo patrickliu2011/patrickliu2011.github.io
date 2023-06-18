@@ -1,14 +1,7 @@
----
-layout: post
-title: An R Intro to Bayesian Data Analysis
----
+# An R Intro to Bayesian Data Analysis
 
 In this post, I will be going over some basics of Bayesian data analysis, based off of chapters 1-3 of *Statistical Rethinking, 2nd Edition* by Richard McElreath. In addition to providing some background, I will go over some basic methods for approximating and sampling from a posterior distribution. I will use R to apply each of these methods to a dataset of Near Earth Objects.
 
-## Table of Contents
-{:no_toc}
-* TOC
-{:toc}
 
 ## Bayesian Data Analysis
 
