@@ -10,6 +10,7 @@ In this post, I will be going over some basics of Bayesian data analysis, based 
 * TOC
 {:toc}
 
+
 ## Bayesian Data Analysis
 
 **Bayesian probability** is an interpretation of probability as a state of belief: a more probable event is one that we believe to be more likely. In contrast, frequentist probability treats probability as the frequency of an event over a large number of samples: as we keep drawing more samples, the ratio of a given event converges to the probability of that event.
@@ -18,7 +19,7 @@ Bayesian probability is a particularly intuitive framework for data analysis bec
 
 Concretely, consider a case where we are flipping a weighted coin. Our data $D$ is a sequence of observed coin flips, heads and tails. The variable controlling the data's dynamics $C$ could consist of a single parameter, the probability that coin will land on heads. Then we can write Bayes' Theorem:
 
-$$P(C \mid D) = \frac{P(D \mid C) P(C)}{P(D)}$$
+&&P(C \mid D) = \frac{P(D \mid C) P(C)}{P(D)}&&
 * $P(C)$ is the **prior belief**, the model before learning. For example, if we believe any weighting is equally likely, then $P(C)$ is the uniform distribution from 0 to 1.
 * $P(C \mid D)$ is the **posterior belief**, the model after learning from data. This is a distribution over weightings, based on which ones are more likely given the observed flips.
 * $P(D \mid C)$ is the **likelihood** of the data given a value of the structure. For a given coin weighting, it represents how likely our sequence of coin flips would have been.
@@ -37,6 +38,8 @@ A potential goal of this dataset is to use information about each NEO to predict
 
 We can start by loading the data (downloaded from Kaggle) and see what it looks like.
 
+In[1]:
+
 
 ```R
 # Load in the data
@@ -45,7 +48,14 @@ head(data, 5)
 ```
 
 
-<table class="dataframe">
+Out[1]:
+
+<style>
+td {
+    border: solid 1px black;
+}
+</style>
+<table class="dataframe" style="border: 2px solid black; border-collapse: collapse">
 <caption>A data.frame: 5 × 10</caption>
 <thead>
 	<tr><th></th><th scope=col>id</th><th scope=col>name</th><th scope=col>est_diameter_min</th><th scope=col>est_diameter_max</th><th scope=col>relative_velocity</th><th scope=col>miss_distance</th><th scope=col>orbiting_body</th><th scope=col>sentry_object</th><th scope=col>absolute_magnitude</th><th scope=col>hazardous</th></tr>
@@ -62,6 +72,8 @@ head(data, 5)
 
 
 
+In[2]:
+
 
 ```R
 sprintf("%i total examples", nrow(data))
@@ -71,6 +83,8 @@ total_S <- total_counts["False"]
 sprintf("%i safe, %i hazardous", total_S, total_H)
 ```
 
+
+Out[2]:
 
 '90836 total examples'
 
@@ -87,7 +101,7 @@ As we can see, each NEO is labeled as safe or hazardous. Our problem setup is to
 
 Given this model design, the next step is to update the model -- that is, use the observed variable values to calculate a **posterior distribution** over parameters based on the observed data. In other words, we want to find the distribution $p \mid H, S$. When we apply Bayes' Theorem, it turns out that
 
-$$P(p \mid H, S) = \dfrac{P(H, S \mid p) P(p)}{P(H, S)} = \dfrac{P(H, S \mid p) P(p)}{\int P(H, S \mid p') P(p') dp'} = f(H, S) p^H(1 - p)^S,$$
+&&P(p \mid H, S) = \dfrac{P(H, S \mid p) P(p)}{P(H, S)} = \dfrac{P(H, S \mid p) P(p)}{\int P(H, S \mid p') P(p') dp'} = f(H, S) p^H(1 - p)^S,&&
 
 where $f(H, S)$ is a function that is constant with respect to $p$.
 
@@ -99,6 +113,8 @@ With analytical solutions off the table, we instead turn to methods for **approx
 
 Here is what the true posterior distribution looks like:
 
+In[3]:
+
 
 ```R
 par(bg="white")
@@ -107,12 +123,16 @@ curve(dbeta(x, total_H+1, total_S+1), from=0, to=1,
 ```
 
 
+Out[3]:
+
     
-![png](code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_8_0.png)
+![png](/code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_8_0.png)
     
 
 
 The posterior distribution becomes very narrow with as many samples as the whole dataset. Based on the observations, we become fairly certain that the probability of an NEO being hazardous is somewhere a bit under 0.1. This is not very conducive to helpful visualizations, so we first downsample the dataset to 20 datapoints. However, the same methods can be applied to the whole dataset in exactly the same way.
+
+In[4]:
 
 
 ```R
@@ -120,6 +140,9 @@ set.seed(121)
 sample_size <- 20
 sample <- data[sample(nrow(data), sample_size), ]
 ```
+
+
+In[5]:
 
 
 ```R
@@ -133,12 +156,16 @@ sprintf("proportion hazardous samples = %f", H / (H + S))
 ```
 
 
+Out[5]:
+
 '17 safe, 3 hazardous'
 
 
 
 'proportion hazardous samples = 0.150000'
 
+
+In[6]:
 
 
 ```R
@@ -148,8 +175,10 @@ curve(dbeta(x, H+1, S+1), from=0, to=1,
 ```
 
 
+Out[6]:
+
     
-![png](code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_12_0.png)
+![png](/code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_12_0.png)
     
 
 
@@ -157,26 +186,32 @@ As we can see, with only 20 samples, we are much less confident in our estimate 
 
 We will be using the `rethinking` package -- to install it, follow the instructions at [this Github repo](https://github.com/rmcelreath/rethinking)
 
+In[7]:
+
 
 ```R
 library(rethinking)
 library(glue)
 ```
 
-    Loading required package: parallel
-    
-    rethinking (Version 2.13.2)
-    
-    
-    Attaching package: ‘rethinking’
-    
-    
-    The following object is masked from ‘package:stats’:
-    
-        rstudent
-    
-    
 
+Out[7]:
+```
+Loading required package: parallel
+
+rethinking (Version 2.13.2)
+
+
+Attaching package: ‘rethinking’
+
+
+The following object is masked from ‘package:stats’:
+
+    rstudent
+
+
+
+```
 
 ### Grid approximation
 
@@ -185,6 +220,8 @@ library(glue)
 Here's how it works concretely. We define a finite set of parameter values as a grid through the parameter space. Since the product of the likelihood and the prior is proportional to the posterior, grid approximation calculates the product $P(H, S \mid p) P(p)$ at each value of $p$ along the grid. By normalizing these values afterwards, we can obtain a rough approximation of the posterior distribution.
 
 Let's do this in R!
+
+In[8]:
 
 
 ```R
@@ -200,6 +237,9 @@ grid_approx <- function(H, S, n_points=20) {
 ```
 
 
+In[9]:
+
+
 ```R
 n_points <- 20
 output_grid <- grid_approx(H, S, n_points=n_points)
@@ -213,8 +253,10 @@ legend(x="topright", legend=c("True distribution", glue("Grid approximation ({n_
 ```
 
 
+Out[9]:
+
     
-![png](code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_18_0.png)
+![png](/code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_18_0.png)
     
 
 
@@ -225,6 +267,8 @@ As we can see, the grid approximation points are pretty close to the actual dist
 **Quadratic approximation**, in short, fits a Gaussian distribution to the posterior distribution. By constraining the posterior of the model to a Gaussian, which is only parameterized by its mean and variance, quadratic approximation massively reduces the computational overhead compared to grid approximation. Because the log of the Gaussian is a parabola, fitting a parabola to the log posterior is equivalent to fitting a Gaussian to the posterior. We simply fit a parabola to the log posterior by locating its peak (corresponding to the mean) and computing the second derivative at that point (corresponding to the variance).
 
 Here's how we do it:
+
+In[10]:
 
 
 ```R
@@ -243,6 +287,9 @@ output_quad <- quad_approx(H, S)
 ```
 
 
+In[11]:
+
+
 ```R
 # analytical calculation
 par(bg="white")
@@ -256,8 +303,10 @@ legend(x="topright", legend=c("True distribution", "Quadratic approximation"),
 ```
 
 
+Out[11]:
+
     
-![png](code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_22_0.png)
+![png](/code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_22_0.png)
     
 
 
@@ -268,6 +317,8 @@ As we can see above, the quadratic approximation roughly matches the true distri
 **Markov chain Monte Carlo (MCMC)** is a family of methods that differ from grid and quadratic approximation in that they do not directly model the posterior distribution. Instead, MCMC methods generate samples from the posterior distribution. The general idea is to take a random walk over the parameter space, guided by a tendency toward higher posterior density points. Then samples along the random walk (which each correspond to sets of parameter values) become distributed as the true posterior distribution. 
 
 Here is an implementation of the Metropolis algorithm, which is one MCMC algorithm.
+
+In[12]:
 
 
 ```R
@@ -289,6 +340,9 @@ p_mcmc <- mcmc_approx(H, S, n_samples=n_samples)
 ```
 
 
+In[13]:
+
+
 ```R
 par(bg="white")
 curve(dbeta(x, H+1, S+1), from=0, to=1, 
@@ -300,12 +354,16 @@ legend(x="topright", legend=c("True distribution", glue("MCMC approximation ({n_
 ```
 
 
+Out[13]:
+
     
-![png](code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_26_0.png)
+![png](/code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_26_0.png)
     
 
 
 As we can see above, the MCMC approximation is relatively noisy because of the random walk. Because we are generating samples and consecutive samples are close to each other, it can take a large number of steps to get an accurate representation of the posterior distribution. With higher dimensional parameter spaces, such as with deep neural networks, this could mean storing an unreasonable number of sets of weights. However, MCMC does have the guarantee of converging to the true posterior with enough samples -- as shown below, increasing the number of samples brings the density of samples extremely close to the true posterior distribution.
+
+In[14]:
 
 
 ```R
@@ -321,13 +379,17 @@ legend(x="topright", legend=c("True distribution", glue("MCMC approximation ({n_
 ```
 
 
+Out[14]:
+
     
-![png](code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_28_0.png)
+![png](/code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_28_0.png)
     
 
 
 ## All together
 We can put all of the graphs on one plot for comparison.
+
+In[15]:
 
 
 ```R
@@ -346,8 +408,10 @@ legend(x="topright", legend=c("True distribution", glue("Grid approximation ({n_
 ```
 
 
+Out[15]:
+
     
-![png](code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_30_0.png)
+![png](/code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_30_0.png)
     
 
 
@@ -359,6 +423,8 @@ Of course, there are other applications of sampling, such as data generation and
 
 We can generate the samples for each of the posterior approximation methods above as follows.
 
+In[16]:
+
 
 ```R
 n_samples <- 1e4
@@ -369,6 +435,9 @@ samples_mcmc <- mcmc_approx(H, S, n_samples=n_samples)
 ```
 
 
+In[17]:
+
+
 ```R
 par(bg="white")
 plot(density(samples_grid, from=0, to=1))
@@ -377,26 +446,30 @@ plot(density(samples_mcmc, from=0, to=1))
 ```
 
 
-    
-![png](code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_34_0.png)
-    
-
-
+Out[17]:
 
     
-![png](code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_34_1.png)
+![png](/code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_34_0.png)
     
 
 
 
     
-![png](code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_34_2.png)
+![png](/code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_34_1.png)
+    
+
+
+
+    
+![png](/code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_34_2.png)
     
 
 
 As we can see from the plots, the density of samples is generally representative of each posterior approximation. We can then estimate various types of summary information from the samples. Here are some of the questions we can answer with their corresponding code, using the MCMC samples generated above:
 
 According to the posterior, how likely are the parameters to be in a certain interval?
+
+In[18]:
 
 
 ```R
@@ -406,8 +479,12 @@ sum(samples_mcmc < 0.3) / n_samples
 ```
 
 
+Out[18]:
+
 0.9125
 
+
+In[19]:
 
 
 ```R
@@ -417,10 +494,14 @@ sum(samples_mcmc > 0.5 & samples_mcmc < 0.75) / n_samples
 ```
 
 
+Out[19]:
+
 6e-04
 
 
 Where are the boundaries that divide the posterior by percentages of the total mass?
+
+In[20]:
 
 
 ```R
@@ -430,8 +511,12 @@ quantile(samples_mcmc, 0.8)
 ```
 
 
+Out[20]:
+
 <strong>80%:</strong> 0.247947241772667
 
+
+In[21]:
 
 
 ```R
@@ -441,14 +526,19 @@ quantile(samples_mcmc , c(0.1 , 0.7))
 ```
 
 
+Out[21]:
+
 <style>
-.dl-inline {width: auto; margin:0; padding: 0}
-.dl-inline>dt, .dl-inline>dd {float: none; width: auto; display: inline-block}
-.dl-inline>dt::after {content: ":\0020"; padding-right: .5ex}
-.dl-inline>dt:not(:first-of-type) {padding-left: .5ex}
-</style><dl class=dl-inline><dt>10%</dt><dd>0.0841605174701213</dd><dt>70%</dt><dd>0.216467254343134</dd></dl>
+dl {width: auto; margin:0; padding: 0}
+dl>dt, dl>dd {float: none; width: auto; display: inline-block}
+dl>dt::after {content: ":\0020"; padding-right: .5ex}
+dl>dt:not(:first-of-type) {padding-left: .5ex}
+</style>
+<dl><dt>10%</dt><dd>0.0841605174701213</dd><dt>70%</dt><dd>0.216467254343134</dd></dl>
 
 
+
+In[22]:
 
 
 ```R
@@ -458,14 +548,19 @@ PI(samples_mcmc , prob=0.5)
 ```
 
 
+Out[22]:
+
 <style>
-.dl-inline {width: auto; margin:0; padding: 0}
-.dl-inline>dt, .dl-inline>dd {float: none; width: auto; display: inline-block}
-.dl-inline>dt::after {content: ":\0020"; padding-right: .5ex}
-.dl-inline>dt:not(:first-of-type) {padding-left: .5ex}
-</style><dl class=dl-inline><dt>25%</dt><dd>0.120351917919524</dd><dt>75%</dt><dd>0.231676248411153</dd></dl>
+dl {width: auto; margin:0; padding: 0}
+dl>dt, dl>dd {float: none; width: auto; display: inline-block}
+dl>dt::after {content: ":\0020"; padding-right: .5ex}
+dl>dt:not(:first-of-type) {padding-left: .5ex}
+</style>
+<dl><dt>25%</dt><dd>0.120351917919524</dd><dt>75%</dt><dd>0.231676248411153</dd></dl>
 
 
+
+In[23]:
 
 
 ```R
@@ -475,16 +570,21 @@ HPDI( samples_mcmc , prob=0.5 )
 ```
 
 
+Out[23]:
+
 <style>
-.dl-inline {width: auto; margin:0; padding: 0}
-.dl-inline>dt, .dl-inline>dd {float: none; width: auto; display: inline-block}
-.dl-inline>dt::after {content: ":\0020"; padding-right: .5ex}
-.dl-inline>dt:not(:first-of-type) {padding-left: .5ex}
-</style><dl class=dl-inline><dt>|0.5</dt><dd>0.0957870247421563</dd><dt>0.5|</dt><dd>0.202208593495329</dd></dl>
+dl {width: auto; margin:0; padding: 0}
+dl>dt, dl>dd {float: none; width: auto; display: inline-block}
+dl>dt::after {content: ":\0020"; padding-right: .5ex}
+dl>dt:not(:first-of-type) {padding-left: .5ex}
+</style>
+<dl><dt>|0.5</dt><dd>0.0957870247421563</dd><dt>0.5|</dt><dd>0.202208593495329</dd></dl>
 
 
 
 Where is a representative value of the distribution?
+
+In[24]:
 
 
 ```R
@@ -493,8 +593,12 @@ chainmode(samples_mcmc, adj=0.01)
 ```
 
 
+Out[24]:
+
 0.167680814188191
 
+
+In[25]:
 
 
 ```R
@@ -503,8 +607,12 @@ mean(samples_mcmc)
 ```
 
 
+Out[25]:
+
 0.181118504671422
 
+
+In[26]:
 
 
 ```R
@@ -513,10 +621,14 @@ median(samples_mcmc)
 ```
 
 
+Out[26]:
+
 0.170278932961001
 
 
 For any sampled parameter value $p$, we can also reverse the process and sample observations (data) given that value. This has several uses, including giving a picture of what the values in the posterior actually mean in terms of what the data looks like concretely.
+
+In[27]:
 
 
 ```R
@@ -528,12 +640,14 @@ plot(density(samples_neo, from=0, to=H+S, adj=0.1))
 ```
 
 
+Out[27]:
+
 'Sampled value of p: 0.112677'
 
 
 
     
-![png](code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_49_1.png)
+![png](/code/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_files/2023-06-17-An-R-Intro-to-Bayesian-Data-Analysis_49_1.png)
     
 
 
