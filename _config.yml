@@ -70,17 +70,15 @@ kramdown:
 
 markdown: kramdown
 
-plugins:
-  - jekyll-jupyter-notebook
-
 # Set the Sass partials directory, as we're using @imports
 sass:
   style: :expanded # You might prefer to minify using :compressed
 
 # Use the following plug-ins
-gems:
+plugins:
   - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
   - jekyll-feed # Create an Atom feed using the official Jekyll feed gem
+  - jekyll-jupyter-notebook
 
 # Exclude these files from your production _site
 exclude:
